@@ -2,6 +2,22 @@
   text-align: center;
 }
 
+.cardsize{
+  height: 70% !important;
+  width: 65% !important;
+}
+
+.container{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+.flex-start{
+  display: flex;
+  justify-content: start;
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;
