@@ -14,7 +14,7 @@ interface Iuser{
     gender:string,
 }
 // const validate = values => {
-//     const errors = {};
+
   
 //     if (!values.firstName) {
 //       errors.firstName = 'Required';
