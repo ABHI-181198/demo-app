@@ -2,20 +2,22 @@
   text-align: center;
 }
 
-.cardsize{
-  height: 70% !important;
+.cardsize {
+  height: 75% !important;
   width: 65% !important;
 }
 
-.container{
+.container {
   display: flex;
   align-items: center;
   justify-content: center;
   height: 100vh;
 }
-.flex-start{
+.flex-start {
   display: flex;
   justify-content: start;
+  margin-bottom: 0px !important;
+  padding: 4px;
 }
 
 .App-logo {
@@ -40,8 +42,16 @@
   color: white;
 }
 
+.dropdown-width .dropdown-toggle {
+  width: -webkit-fill-available;
+}
+
 .App-link {
   color: #61dafb;
+}
+.error {
+  color: red;
+  display: flex;
 }
 
 @keyframes App-logo-spin {
