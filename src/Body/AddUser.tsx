@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import { useFormik } from "formik";
-import { error } from "console";
 import { Dropdown } from "react-bootstrap";
+import { useAppDispatch } from "../store/hooks";
+import { AddUserThunk } from "../Slices/add-user/slice";
 
 interface Iuser {
   firstName: string;
@@ -17,6 +18,7 @@ interface Iuser {
 }
 
 const AddUser = () => {
+  const dispatch=useAppDispatch();
   const [file, setFile] = useState<any>();
   const formData = new FormData();
   const uploadImage = (e: any) => {
@@ -32,6 +34,28 @@ const AddUser = () => {
     // formik.setFieldValue("profileImage", file);
     // setFile(URL.createObjectURL(e.target.files[0]));
   };
+
+ 
+    async function getData() {
+      const url = "https://localhost:7004/api/EmployeeMasters/GetAllEmployees";
+      try {
+        const response = await fetch(url);
+        if (!response.ok) {
+          throw new Error(`Response status: ${response.status}`);
+        }
+    
+        const json = await response.json();
+        console.log("Get Call Here--->!",json);
+      } catch (error:any) {
+        console.error(error.message);
+      }
+    }
+
+  
+
+
+
+
   const initialValues = {
     firstName: "",
     lastName: "",
@@ -79,21 +103,29 @@ const AddUser = () => {
     return errors;
   };
   const onSubmit = (values: any) => {
+    getData();
     console.log("Formik before reset", formik);
-    formData.append("firstName", formik.values.firstName);
-    formData.append("lastName", formik.values.lastName);
-    formData.append("mobileNumber", formik.values.mobileNumber);
-    formData.append("email", formik.values.email);
-    formData.append("gender", formik.values.gender);
-    formData.append("panNumber", formik.values.panNumber);
-    formData.append("passportNumber", formik.values.passportNumber);
-    formData.append("dateOfBirth", formik.values.dateOfBirth);
-    formData.append("dateoFJoining", formik.values.dateoFJoining);
+    formData.append("FirstName", formik.values.firstName);
+    formData.append("LastName", formik.values.lastName);
+    formData.append("MobileNumber", formik.values.mobileNumber);
+    formData.append("EmailAddress", formik.values.email);
+    formData.append("Gender", formik.values.gender);
+    formData.append("PanNumber", formik.values.panNumber);
+    formData.append("PassportNumber", formik.values.passportNumber);
+    formData.append("DateOfBirth", formik.values.dateOfBirth);
+    formData.append("DateOfJoinee", formik.values.dateoFJoining);
+    formData.append("CreatedDate",new Date().toString());
+    formData.append("IsDeleted",false.toString());
+    formData.append("IsActive",true.toString());
+    formData.append("ProfileImage","eeee");
+
+    // formData.append("passport","BN121212");
     // formData.append("profileImage", file);
     const formDataEntries = Array.from(formData.entries());
     formDataEntries.forEach(([key, value]) => {
       console.log(`${key}:`, value);
     });
+    dispatch(AddUserThunk(formData));
     formik.resetForm();
   };
   const formik = useFormik({
@@ -101,6 +133,21 @@ const AddUser = () => {
     validate,
     onSubmit,
   });
+
+  // useEffect(()=>{
+  //   payload={
+  //     firstName: formik.values.firstName,
+  //     lastName:formik.values.lastName,
+  //     mobileNumber:formik.values.mobileNumber,
+  //     email: formik.values.email,
+  //     gender: formik.values.gender,
+  //     panNumber: formik.values.panNumber,
+  //     passportNumber: formik.values.passportNumber,
+  //     dateOfBirth: formik.values.dateOfBirth,
+  //     dateoFJoining: formik.values.dateoFJoining,
+  //     profileImage: formik.val,
+  //   }
+  // },[])
 
   // const forkmikError=formik.errors;
   // const formikTouched=formik.
