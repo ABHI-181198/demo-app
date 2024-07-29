@@ -7,6 +7,7 @@ import { useFormik } from "formik";
 import { Dropdown } from "react-bootstrap";
 import { useAppDispatch } from "../store/hooks";
 import { AddUserThunk } from "../Slices/add-user/slice";
+import axios from "axios";
 
 interface Iuser {
   firstName: string;
@@ -20,6 +21,7 @@ interface Iuser {
 const AddUser = () => {
   const dispatch=useAppDispatch();
   const [file, setFile] = useState<any>();
+  const[data,setData]=useState<any>();
   const formData = new FormData();
   const uploadImage = (e: any) => {
     const file = e.target.files[0];
@@ -35,17 +37,19 @@ const AddUser = () => {
     // setFile(URL.createObjectURL(e.target.files[0]));
   };
 
- 
+    const url = "https://localhost:7004/api/EmployeeMasters/Post";
     async function getData() {
-      const url = "https://localhost:7004/api/EmployeeMasters/GetAllEmployees";
+      const url = "https://localhost:7004/api/EmployeeMasters/Post";
       try {
-        const response = await fetch(url);
-        if (!response.ok) {
-          throw new Error(`Response status: ${response.status}`);
-        }
+        axios.get(url)
+        .then(response => setData(response.data));
+        // const response = await fetch(url);
+        // if (!response.ok) {
+        //   throw new Error(`Response status: ${response.status}`);
+        // }
     
-        const json = await response.json();
-        console.log("Get Call Here--->!",json);
+        const json = data;
+        console.log("Get Call Here--->!",data);
       } catch (error:any) {
         console.error(error.message);
       }
@@ -125,7 +129,18 @@ const AddUser = () => {
     formDataEntries.forEach(([key, value]) => {
       console.log(`${key}:`, value);
     });
-    dispatch(AddUserThunk(formData));
+    // dispatch(AddUserThunk(formData));
+    const postData = async (url:any, data:any) => {
+  try {
+    console.log("Console Before Post",url,data);
+    const response = await axios.post(url, data);
+    return response.data;
+  } catch (error) {
+    console.error("There was an error making the POST request:", error);
+    throw error;
+  }
+  };
+  postData(url,data);
     formik.resetForm();
   };
   const formik = useFormik({
@@ -412,6 +427,7 @@ const AddUser = () => {
                   {/* <input type="file">Upload Image</input> */}
                 </div>
               </Card.Text>
+              <Button onClick={getData}>GetData</Button>
               <Button type="submit" variant="primary">
                 Submit
               </Button>
